@@ -20,9 +20,7 @@ class GetOnBoardingFlowInsightsTest extends TestCase
         $response = $app->handle($request);
 
         $payload = (string) $response->getBody();
-        $expectedPayload = new ActionPayload(200, [
-            'message' => 'Get insight of how users flow through the onboarding process'
-        ]);
+        $expectedPayload = new ActionPayload(200, include __DIR__.'/../../../Stubs/ActionResponses/sample_response.php');
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
 
         $this->assertEquals($serializedPayload, $payload);

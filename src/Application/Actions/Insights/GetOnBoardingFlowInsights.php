@@ -11,8 +11,8 @@ class GetOnBoardingFlowInsights extends Action
 
     protected function action(): Response
     {
-        return $this->respondWithData([
-           'message' => 'Get insight of how users flow through the onboarding process'
-        ]);
+        return $this->respondWithData(
+            include __DIR__.'/../../../../tests/Stubs/ActionResponses/sample_response.php'
+        );
     }
 }
