@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Application\Actions\Insights;
 
 use App\Application\Actions\ActionPayload;
+use App\Application\Responses\SeriesDataResponse;
 use DI\Container;
 use function json_encode;
 use const JSON_PRETTY_PRINT;
@@ -20,7 +21,10 @@ class GetOnBoardingFlowInsightsTest extends TestCase
         $response = $app->handle($request);
 
         $payload = (string) $response->getBody();
-        $expectedPayload = new ActionPayload(200, include __DIR__.'/../../../Stubs/ActionResponses/sample_response.php');
+        $expectedPayload = new ActionPayload(
+            200,
+            (new SeriesDataResponse)->generateResponse('From 2016-08-01 to 2016-08-07')
+        );
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
 
         $this->assertEquals($serializedPayload, $payload);

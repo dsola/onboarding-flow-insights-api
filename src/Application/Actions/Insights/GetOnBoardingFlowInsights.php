@@ -7,12 +7,12 @@ use App\Application\Actions\Action;
 use App\Application\Responses\SeriesDataResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class GetOnBoardingFlowInsights extends Action
+final class GetOnBoardingFlowInsights extends Action
 {
     protected function action(): Response
     {
         return $this->respondWithData(
-            (new SeriesDataResponse)->generateResponse()
+            (new SeriesDataResponse)->generateResponse('From 2016-08-01 to 2016-08-07')
         );
     }
 }
