@@ -30,36 +30,7 @@ final class WeeklyCohortSeries
     {
         return [
             'title' => $this->generateTitle(),
-            'series' => [
-                [
-                    'user_retained_percentage' => 100,
-                    'step'                     => [
-                        'percentage' => 10,
-                        'title'      => 'Create Account',
-                    ],
-                ],
-                [
-                    'user_retained_percentage' => 100,
-                    'step'                     => [
-                        'percentage' => 10,
-                        'title'      => 'Create Account',
-                    ],
-                ],
-                [
-                    'user_retained_percentage' => 100,
-                    'step'                     => [
-                        'percentage' => 10,
-                        'title'      => 'Create Account',
-                    ],
-                ],
-                [
-                    'user_retained_percentage' => 100,
-                    'step'                     => [
-                        'percentage' => 10,
-                        'title'      => 'Create Account',
-                    ],
-                ],
-            ],
+            'series' => $this->series->toArray(),
         ];
     }
 

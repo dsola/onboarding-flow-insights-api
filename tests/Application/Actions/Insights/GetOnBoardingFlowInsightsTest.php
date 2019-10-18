@@ -5,6 +5,10 @@ namespace Tests\Application\Actions\Insights;
 
 use App\Application\Actions\ActionPayload;
 use App\Application\Responses\SeriesDataResponse;
+use App\Domain\Insights\UserRetentionByStepCollection;
+use App\Domain\Insights\WeeklyCohortSeries;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use DI\Container;
 use function json_encode;
 use const JSON_PRETTY_PRINT;
@@ -23,7 +27,12 @@ class GetOnBoardingFlowInsightsTest extends TestCase
         $payload = (string) $response->getBody();
         $expectedPayload = new ActionPayload(
             200,
-            (new SeriesDataResponse)->generateResponse('From 2016-08-01 to 2016-08-07')
+            (new SeriesDataResponse)->generateResponse(
+                new WeeklyCohortSeries(
+                    CarbonImmutable::createFromFormat('Y-m-d', '2016-08-01'),
+                    new UserRetentionByStepCollection
+                )
+            )
         );
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
 

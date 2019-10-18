@@ -5,22 +5,19 @@ namespace App\Domain\Insights;
 
 final class UserRetentionByStep
 {
-    /**
-     * @var float
-     */
     private $userRetainedPercentage;
-    /**
-     * @var Step
-     */
     private $step;
 
     public function __construct(float $userRetainedPercentage, Step $step)
     {
         $this->userRetainedPercentage = $userRetainedPercentage;
-        $this->step = $step;
+        $this->step                   = $step;
     }
 
-    /**
+    public function stepName(): string
+    {
+        return $this->step->name();
+    }    /**
      * @return float
      */
     public function userRetainedPercentage(): float
@@ -28,7 +25,21 @@ final class UserRetentionByStep
         return $this->userRetainedPercentage;
     }
 
-    public function stepName(): string {
-
+    public function stepPercentage(): int
+    {
+        return $this->step->percentage();
     }
+
+    public function toArray(): array
+    {
+        return [
+            'user_retained_percentage' => $this->userRetainedPercentage(),
+            'step'                     => [
+                'percentage' => $this->stepPercentage(),
+                'name'       => $this->stepName(),
+            ],
+        ];
+    }
+
+
 }

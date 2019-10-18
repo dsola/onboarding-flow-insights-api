@@ -8,10 +8,9 @@ final class Step
     private $name;
     private $percentage;
 
-    public function __construct(string $name, int $percentage)
+    public static function createAnAccount(): self
     {
-        $this->name = $name;
-        $this->percentage = $percentage;
+        return new self('Create an account', 0);
     }
 
     public function percentage(): int
@@ -22,5 +21,11 @@ final class Step
     public function name(): string
     {
         return $this->name;
+    }
+
+    private function __construct(string $name, int $percentage)
+    {
+        $this->name = $name;
+        $this->percentage = $percentage;
     }
 }
