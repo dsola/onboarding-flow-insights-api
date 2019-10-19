@@ -8,6 +8,7 @@ use App\Domain\Insights\Step;
 use App\Domain\Insights\UserRetentionByStep;
 use App\Domain\Insights\UserRetentionByStepCollection;
 use App\Domain\Insights\WeeklyCohortSeries;
+use App\Domain\Insights\WeeklyCohortSeriesCollection;
 use Carbon\CarbonImmutable;
 use Doctrine\Common\Collections\Collection;
 use Tests\Application\WithFaker;
@@ -19,30 +20,42 @@ class SeriesDataHasTheProperFormatTest extends TestCase
 {
     use WithFaker;
 
+    final public function test_the_collection_is_empty() {
+        $collection = new WeeklyCohortSeriesCollection();
+
+        $response = (new SeriesDataResponse)->generateResponse($collection);
+
+        $this->assertEquals([], $response);
+    }
+
     final public function test_the_week_title_is_correct() {
         $dateFrom = '2018-08-01';
         $dateTo = '2018-08-08';
 
-        $response = (new SeriesDataResponse)->generateResponse(
-            new WeeklyCohortSeries(
-                CarbonImmutable::createFromFormat('Y-m-d', $dateFrom),
-                new UserRetentionByStepCollection()
-            )
+        $collection = new WeeklyCohortSeriesCollection();
+        $weeklyCohortSeries = new WeeklyCohortSeries(
+            CarbonImmutable::createFromFormat('Y-m-d', $dateFrom),
+            new UserRetentionByStepCollection()
         );
+        $collection->add($weeklyCohortSeries);
 
-        $this->assertEquals($dateFrom . ' ' . $dateTo, $response['title']);
+        $response = (new SeriesDataResponse)->generateResponse($collection);
+
+        $this->assertEquals($dateFrom . ' ' . $dateTo, $response[0]['title']);
     }
 
     final public function test_the_data_series_is_empty() {
-        $response = (new SeriesDataResponse)->generateResponse(
-            new WeeklyCohortSeries(
-                CarbonImmutable::now(),
-                new UserRetentionByStepCollection()
-            )
+        $collection = new WeeklyCohortSeriesCollection();
+        $weeklyCohortSeries = new WeeklyCohortSeries(
+            CarbonImmutable::now(),
+            new UserRetentionByStepCollection()
         );
+        $collection->add($weeklyCohortSeries);
+
+        $response = (new SeriesDataResponse)->generateResponse($collection);
 
         /** @var UserRetentionByStepCollection $series */
-        $series = $response['series'];
+        $series = $response[0]['series'];
         $this->assertEquals([], $series->toArray());
     }
 
@@ -55,13 +68,13 @@ class SeriesDataHasTheProperFormatTest extends TestCase
         );
         $collection = new UserRetentionByStepCollection;
         $collection->add($userRetentionByStep);
+        $weeklyCohortCollection = new WeeklyCohortSeriesCollection;
+        $weeklyCohortCollection->add(new WeeklyCohortSeries(CarbonImmutable::now(), $collection));
 
-        $response = (new SeriesDataResponse)->generateResponse(
-            new WeeklyCohortSeries(CarbonImmutable::now(), $collection)
-        );
+        $response = (new SeriesDataResponse)->generateResponse($weeklyCohortCollection);
 
         /** @var Collection $series */
-        $series = $response['series'];
+        $series = $response[0]['series'];
         $this->assertEquals([
             [
             'user_retained_percentage' => $userRetainedPercentage,
@@ -75,7 +88,6 @@ class SeriesDataHasTheProperFormatTest extends TestCase
 
     final public function test_when_there_are_multiple_user_retention_by_steps() {
 
-        $userRetainedPercentage = random_int(0, 100);
         $userRetentionByStep1 = UserRetentionByStepFaker::make();
         $userRetentionByStep2 = UserRetentionByStepFaker::make();
         $userRetentionByStep3 = UserRetentionByStepFaker::make();
@@ -85,13 +97,13 @@ class SeriesDataHasTheProperFormatTest extends TestCase
         $collection->add($userRetentionByStep2);
         $collection->add($userRetentionByStep3);
 
+        $weeklyCohortCollection = new WeeklyCohortSeriesCollection;
+        $weeklyCohortCollection->add(new WeeklyCohortSeries(CarbonImmutable::now(), $collection));
 
-        $response = (new SeriesDataResponse)->generateResponse(
-            new WeeklyCohortSeries(CarbonImmutable::now(), $collection)
-        );
+        $response = (new SeriesDataResponse)->generateResponse($weeklyCohortCollection);
 
         /** @var Collection $series */
-        $series = $response['series'];
+        $series = $response[0]['series'];
         $this->assertEquals([
             $userRetentionByStep1->toArray(),
             $userRetentionByStep2->toArray(),

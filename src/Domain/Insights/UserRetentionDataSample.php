@@ -1,0 +1,35 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Domain\Insights;
+
+use DateTimeInterface;
+
+final class UserRetentionDataSample
+{
+    private $creationDate;
+    private $userId;
+    private $step;
+
+    public function __construct(DateTimeInterface $creationDate, int $userId, Step $step)
+    {
+        $this->creationDate = $creationDate;
+        $this->userId = $userId;
+        $this->step = $step;
+    }
+
+    public function creationDate(): DateTimeInterface
+    {
+        return $this->creationDate;
+    }
+
+    public function userId(): int
+    {
+        return $this->userId;
+    }
+
+    public function step(): Step
+    {
+        return $this->step;
+    }
+}

@@ -7,12 +7,14 @@ use App\Application\Actions\ActionPayload;
 use App\Application\Responses\SeriesDataResponse;
 use App\Domain\Insights\UserRetentionByStepCollection;
 use App\Domain\Insights\WeeklyCohortSeries;
+use App\Domain\Insights\WeeklyCohortSeriesCollection;
+use App\Domain\User\UserRepository;
 use Carbon\CarbonImmutable;
-use Carbon\CarbonInterface;
 use DI\Container;
+use Tests\Stubs\Repositories\InMemoryUserRetentionRepository;
+use Tests\TestCase;
 use function json_encode;
 use const JSON_PRETTY_PRINT;
-use Tests\TestCase;
 
 class GetOnBoardingFlowInsightsTest extends TestCase
 {
@@ -20,20 +22,19 @@ class GetOnBoardingFlowInsightsTest extends TestCase
         $app = $this->getAppInstance();
         /** @var Container $container */
         $container = $app->getContainer();
+        $container->set(UserRepository::class, new InMemoryUserRetentionRepository);
 
-        $request = $this->createRequest('GET', '/api/v1/on_boarding_flow/insights');
+        $request  = $this->createRequest('GET', '/api/v1/on_boarding_flow/insights');
         $response = $app->handle($request);
 
-        $payload = (string) $response->getBody();
-        $expectedPayload = new ActionPayload(
-            200,
-            (new SeriesDataResponse)->generateResponse(
-                new WeeklyCohortSeries(
-                    CarbonImmutable::createFromFormat('Y-m-d', '2016-08-01'),
-                    new UserRetentionByStepCollection
-                )
-            )
+        $payload            = (string)$response->getBody();
+        $collection         = new WeeklyCohortSeriesCollection;
+        $weeklyCohortSeries = new WeeklyCohortSeries(
+            CarbonImmutable::createFromFormat('Y-m-d', '2016-08-01'),
+            new UserRetentionByStepCollection
         );
+        $collection->add($weeklyCohortSeries);
+        $expectedPayload   = new ActionPayload(200, (new SeriesDataResponse)->generateResponse($collection));
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
 
         $this->assertEquals($serializedPayload, $payload);
