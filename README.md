@@ -40,8 +40,7 @@ This is an example of a response when we request this route:
                         "percentage": 0,
                         "name": "Create an account"
                     }
-                },
-                ...
+                }
             ]
         },
         {
@@ -53,11 +52,9 @@ This is an example of a response when we request this route:
                         "percentage": 0,
                         "name": "Create an account"
                     }
-                },
-              ...
+                }
             ]
-        },
-        ...
+        }
     ]
 }
 ```
