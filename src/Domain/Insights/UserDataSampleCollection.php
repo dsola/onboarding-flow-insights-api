@@ -12,4 +12,11 @@ final class UserDataSampleCollection extends AbstractLazyCollection
     {
         $this->collection = new ArrayCollection();
     }
+
+    public function toArray(): array
+    {
+        $this->initialize();
+
+        return $this->collection->toArray();
+    }
 }

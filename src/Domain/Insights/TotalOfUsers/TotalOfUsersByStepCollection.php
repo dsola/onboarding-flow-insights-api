@@ -5,7 +5,6 @@ namespace App\Domain\Insights\TotalOfUsers;
 
 use App\Domain\Insights\Exceptions\StepNotDefinedInCollection;
 use App\Domain\Insights\Step;
-use Closure;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use function array_reduce;

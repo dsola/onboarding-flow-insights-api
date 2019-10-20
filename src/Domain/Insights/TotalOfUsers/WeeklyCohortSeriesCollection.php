@@ -59,4 +59,11 @@ class WeeklyCohortSeriesCollection extends AbstractLazyCollection
     {
         return $this->collection[$key];
     }
+
+    public function toArray(): array
+    {
+        $this->initialize();
+
+        return $this->collection->toArray();
+    }
 }

@@ -8,8 +8,15 @@ use App\Domain\Insights\UserDataSampleCollection;
 
 class InMemoryUserRetentionRepository implements UserRetentionRepository
 {
+    private $collection;
+
+    public function __construct(UserDataSampleCollection $collection)
+    {
+        $this->collection = $collection;
+    }
+
     public function get(): UserDataSampleCollection
     {
-        return new UserDataSampleCollection;
+        return $this->collection;
     }
 }

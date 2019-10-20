@@ -26,7 +26,6 @@ class UserRetentionByStepCollectionFactory
                 new UserRetentionByStep($currentPercentage, $totalOfUsersPerStep->step())
             );
             $currentPercentage = self::calculateUserRetentionPercentage($totalOfUsersForThisStep, $totalOfUsers);
-            print "Total users: $totalOfUsers, Total of users per step: $totalOfUsersForThisStep, Percentage $currentPercentage% \\n";
         }
 
         return $userRetentionByStepCollection;

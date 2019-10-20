@@ -21,7 +21,7 @@ final class UserRetentionByStepCollection extends AbstractLazyCollection
 
         return $this->collection->map(static function (UserRetentionByStep $userRetentionByStep) {
             return $userRetentionByStep->toArray();
-        });
+        })->toArray();
     }
 
     public function get($stepName): UserRetentionByStep
