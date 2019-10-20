@@ -5,9 +5,9 @@ namespace App\Domain\Insights\TotalOfUsers;
 
 use App\Domain\DomainException\StepNotDefinedInCollection;
 use App\Domain\Insights\Step;
+use function array_reduce;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
-use function var_dump;
 
 class TotalOfUsersByStepCollection extends AbstractLazyCollection
 {
@@ -43,11 +43,18 @@ class TotalOfUsersByStepCollection extends AbstractLazyCollection
         return clone $this;
     }
 
-    public function addUserRetentionFromStep(Step $step): self
+    public function addUserSample(Step $step): self
     {
         $this->get($step->name())->increaseTotal();
 
         return $this;
+    }
+
+    public function totalOfUsers(): int
+    {
+        return array_reduce($this->collection->toArray(), static function (int $total, TotalUsersByStep $item) {
+            return $total + $item->totalOfUsers();
+        }, 0);
     }
 
     public function get($stepName): TotalUsersByStep

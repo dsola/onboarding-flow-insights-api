@@ -6,12 +6,15 @@ namespace App\Application\Actions\Insights;
 use App\Application\Actions\Action;
 use App\Application\Responses\SeriesDataResponse;
 use App\Domain\Insights\Contracts\UserRetentionRepository;
+use App\Domain\Insights\TotalOfUsers\TotalOfUsersByStepCollection;
+use App\Domain\Insights\TotalOfUsers\WeeklyCohortSeries as TotalOfUsersWeeklyCohortSeries;
 use App\Domain\Insights\UserDataSample;
 use App\Domain\Insights\UserRetention\UserRetentionByStepCollection;
 use App\Domain\Insights\UserRetention\WeeklyCohortSeries as UseRetentionWeeklyCohortSeries;
 use App\Domain\Insights\UserRetention\WeeklyCohortSeriesCollection as UseRetentionWeeklyCohortSeriesCollection;
 use App\Domain\Insights\TotalOfUsers\WeeklyCohortSeriesCollection as TotalOfUsersWeeklyCohortSeriesCollection;
 use Carbon\CarbonImmutable;
+use Closure;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
@@ -28,18 +31,21 @@ final class GetOnBoardingFlowInsights extends Action
     protected function action(): Response
     {
         $userRetentionDataSampleCollection = $this->repository->get();
-        // group by weekly cohort
-        $weeklyCohortSeries = new TotalOfUsersWeeklyCohortSeriesCollection();
-        $userRetentionDataSampleCollection->forAll(
-            static function (UserDataSample $sample) use ($weeklyCohortSeries) {
-                $creationDate = $sample->creationDate();
-                if (!$weeklyCohortSeries->hasWeeklyCohort($creationDate)) {
-                    $weeklyCohortSeries->introduceNewWeeklyCohort($creationDate);
-                }
-                $weeklyCohortSeries->addSample($sample);
+
+        $weeklyCohortSeriesCollection = new TotalOfUsersWeeklyCohortSeriesCollection();
+        $userRetentionDataSampleCollection->forAll($this->includeSampleToCollection($weeklyCohortSeriesCollection));
+
+        $collection = new UseRetentionWeeklyCohortSeriesCollection();
+        $weeklyCohortSeriesCollection->forAll(
+            static function (TotalOfUsersWeeklyCohortSeries $weeklyCohortSeries) {
+                $totalOfUsersByStepCollection = $weeklyCohortSeries->series();
+                $totalOfUsers = $totalOfUsersByStepCollection->totalOfUsers();
+                $totalOfUsersByStepCollection->forAll(function(TotalOfUsersByStepCollection $totalOfUsersPerStep) {
+
+                });
             }
         );
-        // for each week, calculate tbe user retention percentage per step
+
 
         $collection = new UseRetentionWeeklyCohortSeriesCollection();
         $collection->add(
@@ -52,5 +58,16 @@ final class GetOnBoardingFlowInsights extends Action
         return $this->respondWithData(
             (new SeriesDataResponse)->generateResponse($collection)
         );
+    }
+
+    private function includeSampleToCollection(TotalOfUsersWeeklyCohortSeriesCollection $weeklyCohortSeriesCollection
+    ): Closure {
+        return static function (UserDataSample $sample) use ($weeklyCohortSeriesCollection) {
+            $creationDate = $sample->creationDate();
+            if (!$weeklyCohortSeriesCollection->hasWeeklyCohort($creationDate)) {
+                $weeklyCohortSeriesCollection->introduceNewWeeklyCohort($creationDate);
+            }
+            $weeklyCohortSeriesCollection->addSample($sample);
+        };
     }
 }

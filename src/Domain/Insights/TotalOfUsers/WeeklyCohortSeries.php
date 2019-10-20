@@ -34,7 +34,7 @@ final class WeeklyCohortSeries
 
     public function addSample(Step $step): self
     {
-        $this->series->addUserRetentionFromStep($step);
+        $this->series->addUserSample($step);
 
         return clone $this;
     }
