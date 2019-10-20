@@ -1,42 +1,81 @@
-# Slim Framework 4 Skeleton Application
+# On-boarding flow insights API
+- This API provides information about the user retention based on the date and the on boarding step.
+- The information is provided with JSON format.
 
-[![Coverage Status](https://coveralls.io/repos/github/slimphp/Slim-Skeleton/badge.svg?branch=master)](https://coveralls.io/github/slimphp/Slim-Skeleton?branch=master)
-
-Use this skeleton application to quickly setup and start working on a new Slim Framework 4 application. This application uses the latest Slim 4 with Slim PSR-7 implementation and PHP-DI container implementation. It also uses the Monolog logger.
-
-This skeleton application was built for Composer. This makes setting up a new Slim Framework application quick and easy.
-
-## Install the Application
-
-Run this command from the directory in which you want to install your new Slim Framework application.
-
+## Installation
+You just need to run `composer` to install the dependencies.
 ```bash
-composer create-project slim/slim-skeleton [my-app-name]
+$ composer install
 ```
-
-Replace `[my-app-name]` with the desired directory name for your new application. You'll want to:
-
-* Point your virtual host document root to your new application's `public/` directory.
-* Ensure `logs/` is web writable.
-
-To run the application in development, you can run these commands 
-
+## Running the application
+- You can use the PHP localhost server in your machine, from the root folder:
 ```bash
-cd [my-app-name]
-composer start
+$ cd public
+$ php -S localhost:5555
 ```
-
-Or you can use `docker-compose` to run the app with `docker`, so you can run these commands:
+- Another option is using Docker. You simply need to run the docker composer using the `docker-compose.yml` provided in 
+the root  folder.
 ```bash
-cd [my-app-name]
-docker-compose up -d
+$ docker-composer up -d
 ```
-After that, open `http://localhost:8080` in your browser.
+## Usage
+To run this application you need to start a web server in order to activate the route that offers the data about the users
+retentions of different samples where the user within the boarding process.
 
-Run this command in the application directory to run the test suite
+For the moment the API only provides a single route to get the series data in weekly cohorts about the user retention based on the on boarding step.
 
-```bash
-composer test
+The route is `/api/v1/on_boarding_flow/insights`.
+
+This is an example of a response when we request this route:
+```json
+{
+    "statusCode": 200,
+    "data": [
+        {
+            "title": "2016-07-19 2016-07-26",
+            "series": [
+                {
+                    "user_retained_percentage": 100,
+                    "step": {
+                        "percentage": 0,
+                        "name": "Create an account"
+                    }
+                },
+                ...
+            ]
+        },
+        {
+            "title": "2016-08-04 2016-08-11",
+            "series": [
+                {
+                    "user_retained_percentage": 100,
+                    "step": {
+                        "percentage": 0,
+                        "name": "Create an account"
+                    }
+                },
+              ...
+            ]
+        },
+        ...
+    ]
+}
 ```
-
-That's it! Now go build something cool.
+### Using Docker
+Same idea but we need to execute the command in the container and redirect the std output.
+```php
+docker exec -it <CONTAINER ID OR NAME> bash -c "php -f run.php <YOUR INPUT FILE>.txt 2>&1"
+```
+## Running Tests
+This application is completely tested to be sure everything works fine and to give the reader some help to understand 
+the implementation.
+### Locally
+Simply run the PHPUnit binary located in the `vendor` folder.
+```php
+vendor/bin/phpunit
+```
+### Using Docker
+Same idea but we need to execute the command in the container and redirect the std output.
+```php
+docker exec -it <CONTAINER ID OR NAME> bash -c "vendor/bin/phpunit 2>&1"
+```
