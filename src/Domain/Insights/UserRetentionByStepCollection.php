@@ -66,4 +66,9 @@ final class UserRetentionByStepCollection extends AbstractLazyCollection
     {
         return $this->collection[$key];
     }
+
+    public function count(): int
+    {
+        return $this->collection->count();
+    }
 }

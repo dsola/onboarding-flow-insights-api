@@ -29,9 +29,14 @@ final class GetOnBoardingFlowInsights extends Action
         $userRetentionDataSampleCollection = $this->repository->get();
         // group by weekly cohort
         $weeklyCohortSeries = new WeeklyCohortSeriesCollection();
-        $userRetentionDataSampleCollection->forAll(static function(UserRetentionDataSample $sample) use ($weeklyCohortSeries) {
-            return true;
-        });
+        $userRetentionDataSampleCollection->forAll(
+            static function (UserRetentionDataSample $sample) use ($weeklyCohortSeries) {
+                $creationDate = $sample->creationDate();
+                if (!$weeklyCohortSeries->hasWeeklyCohort($creationDate)) {
+                    $weeklyCohortSeries->introduceNewWeeklyCohort($creationDate);
+                }
+            }
+        );
         // for each week, calculate tbe user retention percentage per step
 
         $collection = new WeeklyCohortSeriesCollection();

@@ -33,10 +33,11 @@ class WeeklyCohortSeriesCollection extends AbstractLazyCollection
         $this->initialize();
 
         $userRetentionByStepCollection = new UserRetentionByStepCollection;
-        $weeklyCohortSeries = new WeeklyCohortSeries(
-            $date,
-            new UserRetentionByStepCollection
-        );
+        $userRetentionByStepCollection->initializeStepCollection();
+        $weeklyCohortSeries = new WeeklyCohortSeries($date, $userRetentionByStepCollection);
+        $this->collection->add($weeklyCohortSeries);
+
+        return $this;
     }
 
     public function toArray(): array
@@ -46,5 +47,10 @@ class WeeklyCohortSeriesCollection extends AbstractLazyCollection
         return $this->collection->map(static function (WeeklyCohortSeries $weeklyCohortSeries) {
             return $weeklyCohortSeries->toArray();
         })->toArray();
+    }
+
+    public function get($key): WeeklyCohortSeries
+    {
+        return $this->collection[$key];
     }
 }

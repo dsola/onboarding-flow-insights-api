@@ -6,7 +6,10 @@ namespace Tests\Domain\Insights;
 use App\Domain\Insights\Step;
 use App\Domain\Insights\UserRetentionByStep;
 use App\Domain\Insights\UserRetentionByStepCollection;
+use App\Domain\Insights\WeeklyCohortSeriesCollection;
+use Carbon\CarbonImmutable;
 use Tests\TestCase;
+use function var_dump;
 
 class StepCollectionIsInitializedTest extends TestCase
 {
@@ -44,6 +47,18 @@ class StepCollectionIsInitializedTest extends TestCase
         $this->assertEquals(100, $initializedCollection->get(5)->userRetainedPercentage());
         $this->assertEquals(100, $initializedCollection->get(6)->userRetainedPercentage());
         $this->assertEquals(100, $initializedCollection->get(7)->userRetainedPercentage());
+    }
+
+    /** @test **/
+    public function the_weekly_cohort_generates_all_the_step_collection_based_on_the_date()
+    {
+        $date = CarbonImmutable::createFromFormat('Y-m-d', '2019-10-20');
+        $collection = new WeeklyCohortSeriesCollection;
+
+        $collection->introduceNewWeeklyCohort($date);
+
+        $weeklyCohortSeries = $collection->get(0);
+        $this->assertEquals(8, $weeklyCohortSeries->series()->count());
     }
 
     private function hasSameStep(Step $step, UserRetentionByStep $userRetentionByStep): bool

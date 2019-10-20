@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Insights;
 
+use Carbon\CarbonInterface;
 use DateTimeInterface;
 
 final class UserRetentionDataSample
@@ -18,7 +19,7 @@ final class UserRetentionDataSample
         $this->step = $step;
     }
 
-    public function creationDate(): DateTimeInterface
+    public function creationDate(): CarbonInterface
     {
         return $this->creationDate;
     }
