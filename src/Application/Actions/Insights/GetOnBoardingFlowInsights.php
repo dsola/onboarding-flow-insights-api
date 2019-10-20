@@ -7,6 +7,7 @@ use App\Application\Actions\Action;
 use App\Application\Responses\SeriesDataResponse;
 use App\Domain\Insights\Contracts\UserRetentionRepository;
 use App\Domain\Insights\UserRetentionByStepCollection;
+use App\Domain\Insights\UserRetentionDataSample;
 use App\Domain\Insights\WeeklyCohortSeries;
 use App\Domain\Insights\WeeklyCohortSeriesCollection;
 use Carbon\CarbonImmutable;
@@ -25,8 +26,12 @@ final class GetOnBoardingFlowInsights extends Action
 
     protected function action(): Response
     {
-        $userRetantionDataSampleCollection = $this->repository->get();
-        // group by week
+        $userRetentionDataSampleCollection = $this->repository->get();
+        // group by weekly cohort
+        $weeklyCohortSeries = new WeeklyCohortSeriesCollection();
+        $userRetentionDataSampleCollection->forAll(static function(UserRetentionDataSample $sample) use ($weeklyCohortSeries) {
+            return true;
+        });
         // for each week, calculate tbe user retention percentage per step
 
         $collection = new WeeklyCohortSeriesCollection();

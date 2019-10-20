@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Domain\Insights;
 
 use Carbon\CarbonInterface;
+use function print_r;
+use function var_dump;
 
 final class WeeklyCohortSeries
 {
@@ -32,6 +34,11 @@ final class WeeklyCohortSeries
             'title' => $this->generateTitle(),
             'series' => $this->series->toArray(),
         ];
+    }
+
+    public function belongsToCohort(CarbonInterface $date): bool
+    {
+        return $this->firstDay->lessThanOrEqualTo($date) && $this->firstDay->addWeek()->greaterThanOrEqualTo($date);
     }
 
     private function generateTitle(): string
