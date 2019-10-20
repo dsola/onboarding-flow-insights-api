@@ -3,25 +3,15 @@ declare(strict_types=1);
 
 namespace App\Domain\Insights\TotalOfUsers;
 
-use App\Domain\DomainException\StepNotDefinedInCollection;
+use App\Domain\Insights\Exceptions\StepNotDefinedInCollection;
 use App\Domain\Insights\Step;
-use function array_reduce;
+use Closure;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
+use function array_reduce;
 
 class TotalOfUsersByStepCollection extends AbstractLazyCollection
 {
-    private const STEP_POSITION_MAP = [
-        Step::CREATE_AN_ACCOUNT => 0,
-        Step::ACTIVATE_AN_ACCOUNT => 1,
-        Step::PROVIDE_PROFILE_INFORMATION => 2,
-        Step::WHAT_JOBS_ARE_YOU_INTERESTED_IN => 3,
-        Step::DO_YOU_HAVE_RELEVANT_EXPERIENCE_IN_THIS_JOBS => 4,
-        Step::ARE_YOU_A_FREELANCER => 5,
-        Step::WAITING_FOR_APPROVAL => 6,
-        Step::APPROVAL => 7,
-    ];
-
     protected function doInitialize(): void
     {
         $this->collection = new ArrayCollection();
@@ -59,7 +49,7 @@ class TotalOfUsersByStepCollection extends AbstractLazyCollection
 
     public function get($stepName): TotalUsersByStep
     {
-        $element = $this->collection[self::STEP_POSITION_MAP[$stepName]];
+        $element = $this->collection[Step::STEP_ORDER_MAP[$stepName]];
         if (null === $element) {
             throw StepNotDefinedInCollection::fromStep($stepName, $this);
         }
@@ -69,5 +59,10 @@ class TotalOfUsersByStepCollection extends AbstractLazyCollection
     public function count(): int
     {
         return $this->collection->count();
+    }
+
+    public function toArray(): array
+    {
+        return $this->collection->toArray();
     }
 }

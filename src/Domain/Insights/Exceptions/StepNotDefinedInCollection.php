@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\DomainException;
+namespace App\Domain\Insights\Exceptions;
 
 use Doctrine\Common\Collections\Collection;
 use InvalidArgumentException;

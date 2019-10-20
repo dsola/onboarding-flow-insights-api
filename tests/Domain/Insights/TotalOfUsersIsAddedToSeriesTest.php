@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace Tests\Domain\Insights;
 
-use App\Domain\DomainException\StepNotDefinedInCollection;
+use App\Domain\Insights\Exceptions\StepNotDefinedInCollection;
 use App\Domain\Insights\Step;
 use App\Domain\Insights\TotalOfUsers\TotalOfUsersByStepCollection;
 use App\Domain\Insights\TotalOfUsers\WeeklyCohortSeries;
 use App\Domain\Insights\TotalOfUsers\WeeklyCohortSeriesCollection;
 use App\Domain\Insights\UserDataSample;
 use Carbon\CarbonImmutable;
-use function random_int;
 use Tests\TestCase;
+use function random_int;
 
 class TotalOfUsersIsAddedToSeriesTest extends TestCase
 {

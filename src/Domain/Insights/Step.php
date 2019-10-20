@@ -14,6 +14,18 @@ final class Step
     public const WAITING_FOR_APPROVAL = 'Waiting for approval';
     public const APPROVAL = 'Approval';
 
+    public const STEP_ORDER_MAP = [
+        Step::CREATE_AN_ACCOUNT => 0,
+        Step::ACTIVATE_AN_ACCOUNT => 1,
+        Step::PROVIDE_PROFILE_INFORMATION => 2,
+        Step::WHAT_JOBS_ARE_YOU_INTERESTED_IN => 3,
+        Step::DO_YOU_HAVE_RELEVANT_EXPERIENCE_IN_THIS_JOBS => 4,
+        Step::ARE_YOU_A_FREELANCER => 5,
+        Step::WAITING_FOR_APPROVAL => 6,
+        Step::APPROVAL => 7,
+    ];
+
+
     private $name;
     private $percentage;
 

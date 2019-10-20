@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Insights\UserRetention;
 
+use App\Domain\Insights\Exceptions\StepNotDefinedInCollection;
+use App\Domain\Insights\Step;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -22,9 +24,13 @@ final class UserRetentionByStepCollection extends AbstractLazyCollection
         });
     }
 
-    public function get($key): UserRetentionByStep
+    public function get($stepName): UserRetentionByStep
     {
-        return $this->collection[$key];
+        $element = $this->collection[Step::STEP_ORDER_MAP[$stepName]];
+        if (null === $element) {
+            throw StepNotDefinedInCollection::fromStep($stepName, $this);
+        }
+        return $element;
     }
 
     public function count(): int

@@ -7,9 +7,12 @@ use App\Application\Actions\Action;
 use App\Application\Responses\SeriesDataResponse;
 use App\Domain\Insights\Contracts\UserRetentionRepository;
 use App\Domain\Insights\TotalOfUsers\TotalOfUsersByStepCollection;
+use App\Domain\Insights\TotalOfUsers\TotalUsersByStep;
 use App\Domain\Insights\TotalOfUsers\WeeklyCohortSeries as TotalOfUsersWeeklyCohortSeries;
 use App\Domain\Insights\UserDataSample;
+use App\Domain\Insights\UserRetention\UserRetentionByStep;
 use App\Domain\Insights\UserRetention\UserRetentionByStepCollection;
+use App\Domain\Insights\UserRetention\UserRetentionByStepCollectionFactory;
 use App\Domain\Insights\UserRetention\WeeklyCohortSeries as UseRetentionWeeklyCohortSeries;
 use App\Domain\Insights\UserRetention\WeeklyCohortSeriesCollection as UseRetentionWeeklyCohortSeriesCollection;
 use App\Domain\Insights\TotalOfUsers\WeeklyCohortSeriesCollection as TotalOfUsersWeeklyCohortSeriesCollection;
@@ -35,16 +38,16 @@ final class GetOnBoardingFlowInsights extends Action
         $weeklyCohortSeriesCollection = new TotalOfUsersWeeklyCohortSeriesCollection();
         $userRetentionDataSampleCollection->forAll($this->includeSampleToCollection($weeklyCohortSeriesCollection));
 
-        $collection = new UseRetentionWeeklyCohortSeriesCollection();
-        $weeklyCohortSeriesCollection->forAll(
-            static function (TotalOfUsersWeeklyCohortSeries $weeklyCohortSeries) {
-                $totalOfUsersByStepCollection = $weeklyCohortSeries->series();
-                $totalOfUsers = $totalOfUsersByStepCollection->totalOfUsers();
-                $totalOfUsersByStepCollection->forAll(function(TotalOfUsersByStepCollection $totalOfUsersPerStep) {
+        $collection = $weeklyCohortSeriesCollection->map(function (TotalOfUsersWeeklyCohortSeries $weeklyCohortSeries) {
+                $userRetentionByStepCollection = UserRetentionByStepCollectionFactory::fromTotalUsersByStepCollection(
+                    $weeklyCohortSeries->series()
+                );
 
-                });
-            }
-        );
+                return new UseRetentionWeeklyCohortSeries(
+                    $weeklyCohortSeries->firstDay(),
+                    $userRetentionByStepCollection
+                );
+        });
 
 
         $collection = new UseRetentionWeeklyCohortSeriesCollection();

@@ -31,6 +31,12 @@ class TotalUsersByStep
     {
         ++$this->totalOfUsers;
     }
+
+    public function step(): Step
+    {
+        return $this->step;
+    }
+
     public function stepName(): string
     {
         return $this->step->name();
