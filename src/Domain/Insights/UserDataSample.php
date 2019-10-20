@@ -6,7 +6,7 @@ namespace App\Domain\Insights;
 use Carbon\CarbonInterface;
 use DateTimeInterface;
 
-final class UserRetentionDataSample
+final class UserDataSample
 {
     private $creationDate;
     private $userId;

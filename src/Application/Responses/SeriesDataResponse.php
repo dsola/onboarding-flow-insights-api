@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Application\Responses;
 
-use App\Domain\Insights\WeeklyCohortSeriesCollection;
+use App\Domain\Insights\UserRetention\WeeklyCohortSeriesCollection;
 
 final class SeriesDataResponse
 {

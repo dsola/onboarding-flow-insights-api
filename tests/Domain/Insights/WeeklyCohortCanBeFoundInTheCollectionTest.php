@@ -2,9 +2,9 @@
 
 namespace Tests\Domain\Insights;
 
-use App\Domain\Insights\UserRetentionByStepCollection;
-use App\Domain\Insights\WeeklyCohortSeries;
-use App\Domain\Insights\WeeklyCohortSeriesCollection;
+use App\Domain\Insights\TotalOfUsers\TotalOfUsersByStepCollection;
+use App\Domain\Insights\TotalOfUsers\WeeklyCohortSeries;
+use App\Domain\Insights\TotalOfUsers\WeeklyCohortSeriesCollection;
 use Carbon\CarbonImmutable;
 use Tests\TestCase;
 
@@ -21,7 +21,7 @@ class WeeklyCohortCanBeFoundInTheCollectionTest extends TestCase
     {
         $twoWeeksAgo = CarbonImmutable::createFromFormat('Y-m-d', '2019-10-01');
         $collection = new WeeklyCohortSeriesCollection();
-        $collection->add(new WeeklyCohortSeries($twoWeeksAgo, new UserRetentionByStepCollection));
+        $collection->add(new WeeklyCohortSeries($twoWeeksAgo, new TotalOfUsersByStepCollection));
 
         $this->assertFalse(
             $collection->hasWeeklyCohort(CarbonImmutable::createFromFormat('Y-m-d', '2019-10-20'))
@@ -33,7 +33,7 @@ class WeeklyCohortCanBeFoundInTheCollectionTest extends TestCase
     {
         $twoDaysAgo = CarbonImmutable::createFromFormat('Y-m-d', '2019-10-01');
         $collection = new WeeklyCohortSeriesCollection();
-        $collection->add(new WeeklyCohortSeries($twoDaysAgo, new UserRetentionByStepCollection));
+        $collection->add(new WeeklyCohortSeries($twoDaysAgo, new TotalOfUsersByStepCollection));
 
         $this->assertTrue(
             $collection->hasWeeklyCohort(CarbonImmutable::createFromFormat('Y-m-d', '2019-10-03'))
@@ -45,7 +45,7 @@ class WeeklyCohortCanBeFoundInTheCollectionTest extends TestCase
     {
         $twoDaysAgo = CarbonImmutable::createFromFormat('Y-m-d', '2019-10-01');
         $collection = new WeeklyCohortSeriesCollection();
-        $collection->add(new WeeklyCohortSeries($twoDaysAgo, new UserRetentionByStepCollection));
+        $collection->add(new WeeklyCohortSeries($twoDaysAgo, new TotalOfUsersByStepCollection));
 
         $this->assertTrue(
             $collection->hasWeeklyCohort(CarbonImmutable::createFromFormat('Y-m-d', '2019-10-01'))
@@ -57,7 +57,7 @@ class WeeklyCohortCanBeFoundInTheCollectionTest extends TestCase
     {
         $twoDaysAgo = CarbonImmutable::createFromFormat('Y-m-d', '2019-10-01');
         $collection = new WeeklyCohortSeriesCollection();
-        $collection->add(new WeeklyCohortSeries($twoDaysAgo, new UserRetentionByStepCollection));
+        $collection->add(new WeeklyCohortSeries($twoDaysAgo, new TotalOfUsersByStepCollection));
 
         $this->assertTrue(
             $collection->hasWeeklyCohort(CarbonImmutable::createFromFormat('Y-m-d', '2019-10-08'))

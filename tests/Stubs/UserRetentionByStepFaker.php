@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests\Stubs;
 
 use App\Domain\Insights\Step;
-use App\Domain\Insights\UserRetentionByStep;
+use App\Domain\Insights\UserRetention\UserRetentionByStep;
 use function random_int;
 
 final class UserRetentionByStepFaker

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Insights\Contracts;
 
-use App\Domain\Insights\UserRetentionDataSampleCollection;
+use App\Domain\Insights\UserDataSampleCollection;
 
 interface UserRetentionRepository
 {
-    public function get(): UserRetentionDataSampleCollection;
+    public function get(): UserDataSampleCollection;
 }

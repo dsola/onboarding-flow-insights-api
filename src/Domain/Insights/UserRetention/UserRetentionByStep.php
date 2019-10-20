@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Insights;
+namespace App\Domain\Insights\UserRetention;
+
+use App\Domain\Insights\Step;
 
 final class UserRetentionByStep
 {
@@ -17,7 +19,9 @@ final class UserRetentionByStep
     public function stepName(): string
     {
         return $this->step->name();
-    }    /**
+    }
+
+    /**
      * @return float
      */
     public function userRetainedPercentage(): float

@@ -5,9 +5,9 @@ namespace Tests\Application\Actions\Insights;
 
 use App\Application\Actions\ActionPayload;
 use App\Application\Responses\SeriesDataResponse;
-use App\Domain\Insights\UserRetentionByStepCollection;
-use App\Domain\Insights\WeeklyCohortSeries;
-use App\Domain\Insights\WeeklyCohortSeriesCollection;
+use App\Domain\Insights\UserRetention\UserRetentionByStepCollection;
+use App\Domain\Insights\UserRetention\WeeklyCohortSeries;
+use App\Domain\Insights\UserRetention\WeeklyCohortSeriesCollection;
 use App\Domain\User\UserRepository;
 use Carbon\CarbonImmutable;
 use DI\Container;

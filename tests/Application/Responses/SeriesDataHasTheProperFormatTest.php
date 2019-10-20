@@ -5,10 +5,10 @@ namespace Tests\Application\Responses;
 
 use App\Application\Responses\SeriesDataResponse;
 use App\Domain\Insights\Step;
-use App\Domain\Insights\UserRetentionByStep;
-use App\Domain\Insights\UserRetentionByStepCollection;
-use App\Domain\Insights\WeeklyCohortSeries;
-use App\Domain\Insights\WeeklyCohortSeriesCollection;
+use App\Domain\Insights\UserRetention\UserRetentionByStep;
+use App\Domain\Insights\UserRetention\UserRetentionByStepCollection;
+use App\Domain\Insights\UserRetention\WeeklyCohortSeries;
+use App\Domain\Insights\UserRetention\WeeklyCohortSeriesCollection;
 use Carbon\CarbonImmutable;
 use Doctrine\Common\Collections\Collection;
 use Tests\Application\WithFaker;

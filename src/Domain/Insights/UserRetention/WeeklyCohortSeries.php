@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Insights;
+namespace App\Domain\Insights\UserRetention;
 
+use App\Domain\Insights\Step;
 use Carbon\CarbonInterface;
 
 final class WeeklyCohortSeries
@@ -32,11 +33,6 @@ final class WeeklyCohortSeries
             'title' => $this->generateTitle(),
             'series' => $this->series->toArray(),
         ];
-    }
-
-    public function belongsToCohort(CarbonInterface $date): bool
-    {
-        return $this->firstDay->lessThanOrEqualTo($date) && $this->firstDay->addWeek()->greaterThanOrEqualTo($date);
     }
 
     private function generateTitle(): string

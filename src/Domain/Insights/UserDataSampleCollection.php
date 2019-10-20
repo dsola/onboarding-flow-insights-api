@@ -6,7 +6,7 @@ namespace App\Domain\Insights;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 
-final class UserRetentionDataSampleCollection extends AbstractLazyCollection
+final class UserDataSampleCollection extends AbstractLazyCollection
 {
     protected function doInitialize(): void
     {

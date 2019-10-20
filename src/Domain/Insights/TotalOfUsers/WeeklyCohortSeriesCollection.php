@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Insights;
+namespace App\Domain\Insights\TotalOfUsers;
 
+use App\Domain\Insights\UserDataSample;
 use Carbon\CarbonInterface;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,7 +33,7 @@ class WeeklyCohortSeriesCollection extends AbstractLazyCollection
     {
         $this->initialize();
 
-        $userRetentionByStepCollection = new UserRetentionByStepCollection;
+        $userRetentionByStepCollection = new TotalOfUsersByStepCollection();
         $userRetentionByStepCollection->initializeStepCollection();
         $weeklyCohortSeries = new WeeklyCohortSeries($date, $userRetentionByStepCollection);
         $this->collection->add($weeklyCohortSeries);
@@ -40,13 +41,18 @@ class WeeklyCohortSeriesCollection extends AbstractLazyCollection
         return $this;
     }
 
-    public function toArray(): array
+    public function addSample(UserDataSample $sample): self
     {
         $this->initialize();
 
-        return $this->collection->map(static function (WeeklyCohortSeries $weeklyCohortSeries) {
-            return $weeklyCohortSeries->toArray();
-        })->toArray();
+        /** @var WeeklyCohortSeries $weeklyCohortSeries */
+        foreach ($this->collection as $key => $weeklyCohortSeries) {
+            if ($weeklyCohortSeries->belongsToCohort($sample->creationDate())) {
+                $this->collection[$key] = $weeklyCohortSeries->addSample($sample->step());
+            }
+        }
+
+        return clone $this;
     }
 
     public function get($key): WeeklyCohortSeries
