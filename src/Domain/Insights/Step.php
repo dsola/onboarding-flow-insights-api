@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Insights;
 
+use App\Domain\Insights\Exceptions\UnknownStep;
 use function array_flip;
 use function array_reverse;
 use function var_dump;
@@ -102,9 +103,19 @@ final class Step
         );
     }
 
+    /**
+     * @param int $percentage
+     * @throws UnknownStep
+     * @return Step
+     */
     public static function fromPercentage(int $percentage): self
     {
-        return new self(array_flip(self::STEP_PERCENTAGE_MAP)[$percentage], $percentage);
+        $flippedMap = array_flip(self::STEP_PERCENTAGE_MAP);
+        if (empty($flippedMap[$percentage])) {
+            throw UnknownStep::byPercentage($percentage);
+        }
+
+        return new self($flippedMap[$percentage], $percentage);
     }
 
     public function percentage(): int

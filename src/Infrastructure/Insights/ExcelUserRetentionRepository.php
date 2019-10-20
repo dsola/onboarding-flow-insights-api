@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Insights;
 
 use App\Domain\Insights\Contracts\UserRetentionRepository;
+use App\Domain\Insights\Exceptions\UnknownStep;
 use App\Domain\Insights\Step;
 use App\Domain\Insights\UserDataSample;
 use App\Domain\Insights\UserDataSampleCollection;
@@ -31,13 +32,17 @@ class ExcelUserRetentionRepository implements UserRetentionRepository
             ->toArray(null, true, true, true);
         array_shift($workSheets);
         foreach ($workSheets as $workSheet) {
-            $collection->add(
-                new UserDataSample(
-                    CarbonImmutable::createFromFormat('Y-m-d', $workSheet['B']),
-                    (int) $workSheet['A'],
-                    Step::fromPercentage((int) $workSheet['C'])
-                )
-            );
+            try {
+                $collection->add(
+                    new UserDataSample(
+                        CarbonImmutable::createFromFormat('Y-m-d', $workSheet['B']),
+                        (int) $workSheet['A'],
+                        Step::fromPercentage((int) $workSheet['C'])
+                    )
+                );
+            } catch (UnknownStep $exception) {
+                continue;
+            }
         }
 
         return $collection;
