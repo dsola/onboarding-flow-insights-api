@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Insights;
 
-use App\Domain\Insights\Exceptions\UnknownStep;
 use function array_flip;
-use function array_reverse;
-use function var_dump;
 
 final class Step
 {
@@ -103,16 +100,11 @@ final class Step
         );
     }
 
-    /**
-     * @param int $percentage
-     * @throws UnknownStep
-     * @return Step
-     */
     public static function fromPercentage(int $percentage): self
     {
         $flippedMap = array_flip(self::STEP_PERCENTAGE_MAP);
         if (empty($flippedMap[$percentage])) {
-            throw UnknownStep::byPercentage($percentage);
+            return self::findTheClosestStepByPercentage($percentage);
         }
 
         return new self($flippedMap[$percentage], $percentage);
@@ -132,5 +124,16 @@ final class Step
     {
         $this->name = $name;
         $this->percentage = $percentage;
+    }
+
+    private static function findTheClosestStepByPercentage(float $percentage): self
+    {
+        foreach (self::STEP_PERCENTAGE_MAP as $stepPercentage) {
+            if ($percentage < $stepPercentage) {
+                return self::fromPercentage($stepPercentage);
+            }
+        }
+
+        return self::approval();
     }
 }

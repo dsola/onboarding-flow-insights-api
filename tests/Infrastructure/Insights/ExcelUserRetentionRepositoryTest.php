@@ -49,16 +49,4 @@ class ExcelUserRetentionRepositoryTest extends TestCase
 
         $this->assertEquals(4, $userDataSampleCollection->count());
     }
-
-    /** @test **/
-    public function the_repository_skips_the_rows_with_wrong_step_percentages()
-    {
-        $filename = __DIR__.'/../../Stubs/SampleInputs/with_wrong_percentages.csv';
-        $spreadSheet = IOFactory::load($filename);
-        $repository = new ExcelUserRetentionRepository($spreadSheet);
-
-        $userDataSampleCollection = $repository->get();
-
-        $this->assertEquals(3, $userDataSampleCollection->count());
-    }
 }
