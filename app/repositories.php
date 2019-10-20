@@ -2,16 +2,15 @@
 declare(strict_types=1);
 
 use App\Domain\Insights\Contracts\UserRetentionRepository;
-use App\Domain\User\UserRepository;
-use App\Infrastructure\Persistence\User\InMemoryUserRepository;
-use function DI\autowire;
+use App\Infrastructure\Insights\ExcelUserRetentionRepository;
 use DI\ContainerBuilder;
-use Tests\Stubs\Repositories\InMemoryUserRetentionRepository;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 return function (ContainerBuilder $containerBuilder) {
     // Here we map our UserRepository interface to its in memory implementation
     $containerBuilder->addDefinitions([
-        UserRepository::class => \DI\autowire(InMemoryUserRepository::class),
-        UserRetentionRepository::class => autowire(InMemoryUserRetentionRepository::class),
+        UserRetentionRepository::class => new ExcelUserRetentionRepository(
+            IOFactory::load(__DIR__.'/../resources/export.csv')
+        ),
     ]);
 };

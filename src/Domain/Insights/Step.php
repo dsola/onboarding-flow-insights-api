@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Insights;
 
+use function array_flip;
+use function array_reverse;
+use function var_dump;
+
 final class Step
 {
     public const CREATE_AN_ACCOUNT = 'Create an account';
@@ -25,48 +29,82 @@ final class Step
         Step::APPROVAL => 7,
     ];
 
+    public const STEP_PERCENTAGE_MAP = [
+        Step::CREATE_AN_ACCOUNT => 0,
+        Step::ACTIVATE_AN_ACCOUNT => 20,
+        Step::PROVIDE_PROFILE_INFORMATION => 40,
+        Step::WHAT_JOBS_ARE_YOU_INTERESTED_IN => 50,
+        Step::DO_YOU_HAVE_RELEVANT_EXPERIENCE_IN_THIS_JOBS => 70,
+        Step::ARE_YOU_A_FREELANCER => 90,
+        Step::WAITING_FOR_APPROVAL => 99,
+        Step::APPROVAL => 100,
+    ];
+
 
     private $name;
     private $percentage;
 
     public static function createAnAccount(): self
     {
-        return new self(self::CREATE_AN_ACCOUNT, 0);
+        return new self(self::CREATE_AN_ACCOUNT, self::STEP_PERCENTAGE_MAP[self::CREATE_AN_ACCOUNT]);
     }
 
     public static function activateAnAccount(): self
     {
-        return new self(self::ACTIVATE_AN_ACCOUNT, 20);
+        return new self(self::ACTIVATE_AN_ACCOUNT, self::STEP_PERCENTAGE_MAP[self::ACTIVATE_AN_ACCOUNT]);
     }
 
     public static function provideProfileInformation(): self
     {
-        return new self(self::PROVIDE_PROFILE_INFORMATION, 40);
+        return new self(
+            self::PROVIDE_PROFILE_INFORMATION,
+            self::STEP_PERCENTAGE_MAP[self::PROVIDE_PROFILE_INFORMATION]
+        );
     }
 
     public static function whatJobsAreYouInterestedIn(): self
     {
-        return new self(self::WHAT_JOBS_ARE_YOU_INTERESTED_IN, 50);
+        return new self(
+            self::WHAT_JOBS_ARE_YOU_INTERESTED_IN,
+            self::STEP_PERCENTAGE_MAP[self::WHAT_JOBS_ARE_YOU_INTERESTED_IN]
+        );
     }
 
     public static function doYouHaveARelevantExperienceInTheseJobs(): self
     {
-        return new self(self::DO_YOU_HAVE_RELEVANT_EXPERIENCE_IN_THIS_JOBS, 70);
+        return new self(
+            self::DO_YOU_HAVE_RELEVANT_EXPERIENCE_IN_THIS_JOBS,
+            self::STEP_PERCENTAGE_MAP[self::DO_YOU_HAVE_RELEVANT_EXPERIENCE_IN_THIS_JOBS]
+        );
     }
 
     public static function areYouAFreelancer(): self
     {
-        return new self(self::ARE_YOU_A_FREELANCER, 90);
+        return new self(
+            self::ARE_YOU_A_FREELANCER,
+            self::STEP_PERCENTAGE_MAP[self::ARE_YOU_A_FREELANCER]
+        );
     }
 
     public static function waitingForApproval(): self
     {
-        return new self(self::WAITING_FOR_APPROVAL, 99);
+        return new self(
+            self::WAITING_FOR_APPROVAL,
+            self::STEP_PERCENTAGE_MAP[self::WAITING_FOR_APPROVAL]
+        );
     }
 
     public static function approval(): self
     {
-        return new self(self::APPROVAL, 100);
+        return new self(
+            self::APPROVAL,
+            self::STEP_PERCENTAGE_MAP[self::APPROVAL]
+        );
+    }
+
+    public static function fromPercentage(int $percentage): self
+    {
+        return new self(array_flip(self::STEP_PERCENTAGE_MAP)[$percentage], $percentage);
     }
 
     public function percentage(): int
