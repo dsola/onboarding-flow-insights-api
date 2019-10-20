@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace App\Domain\Insights\TotalOfUsers;
 
+use App\Domain\DomainException\StepNotDefinedInCollection;
 use App\Domain\Insights\Step;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
+use function var_dump;
 
 class TotalOfUsersByStepCollection extends AbstractLazyCollection
 {
-    public const STEP_POSITION_MAP = [
+    private const STEP_POSITION_MAP = [
         Step::CREATE_AN_ACCOUNT => 0,
         Step::ACTIVATE_AN_ACCOUNT => 1,
         Step::PROVIDE_PROFILE_INFORMATION => 2,
@@ -43,14 +45,18 @@ class TotalOfUsersByStepCollection extends AbstractLazyCollection
 
     public function addUserRetentionFromStep(Step $step): self
     {
-        $this->get(self::STEP_POSITION_MAP[$step->name()])->increaseTotal();
+        $this->get($step->name())->increaseTotal();
 
         return $this;
     }
 
-    public function get($key): TotalUsersByStep
+    public function get($stepName): TotalUsersByStep
     {
-        return $this->collection[$key];
+        $element = $this->collection[self::STEP_POSITION_MAP[$stepName]];
+        if (null === $element) {
+            throw StepNotDefinedInCollection::fromStep($stepName, $this);
+        }
+        return $element;
     }
 
     public function count(): int
