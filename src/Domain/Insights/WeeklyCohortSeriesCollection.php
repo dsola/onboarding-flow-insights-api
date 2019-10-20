@@ -28,6 +28,17 @@ class WeeklyCohortSeriesCollection extends AbstractLazyCollection
         return false;
     }
 
+    public function introduceNewWeeklyCohort(CarbonInterface $date): self
+    {
+        $this->initialize();
+
+        $userRetentionByStepCollection = new UserRetentionByStepCollection;
+        $weeklyCohortSeries = new WeeklyCohortSeries(
+            $date,
+            new UserRetentionByStepCollection
+        );
+    }
+
     public function toArray(): array
     {
         $this->initialize();

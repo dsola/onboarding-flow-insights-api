@@ -13,6 +13,46 @@ final class UserRetentionByStepCollection extends AbstractLazyCollection
         $this->collection = new ArrayCollection();
     }
 
+    public function initializeStepCollection(): self
+    {
+        $this->collection = new ArrayCollection();
+
+        $this->collection->add(new UserRetentionByStep(
+            100,
+            Step::createAnAccount()
+        ));
+        $this->collection->add(new UserRetentionByStep(
+            100,
+            Step::activateAnAccount()
+        ));
+        $this->collection->add(new UserRetentionByStep(
+            100,
+            Step::provideProfileInformation()
+        ));
+        $this->collection->add(new UserRetentionByStep(
+            100,
+            Step::whatJobsAreYouInterestedIn()
+        ));
+        $this->collection->add(new UserRetentionByStep(
+            100,
+            Step::doYouHaveARelevantExperienceInTheseJobs()
+        ));
+        $this->collection->add(new UserRetentionByStep(
+            100,
+            Step::areYouAFreelancer()
+        ));
+        $this->collection->add(new UserRetentionByStep(
+            100,
+            Step::waitingForApproval()
+        ));
+        $this->collection->add(new UserRetentionByStep(
+            100,
+            Step::approval()
+        ));
+
+        return $this;
+    }
+
     public function toArray()
     {
         $this->initialize();
@@ -20,5 +60,10 @@ final class UserRetentionByStepCollection extends AbstractLazyCollection
         return $this->collection->map(static function (UserRetentionByStep $userRetentionByStep) {
             return $userRetentionByStep->toArray();
         });
+    }
+
+    public function get($key): UserRetentionByStep
+    {
+        return $this->collection[$key];
     }
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\Domain\Insights;
 
 use Carbon\CarbonInterface;
-use function print_r;
-use function var_dump;
 
 final class WeeklyCohortSeries
 {
