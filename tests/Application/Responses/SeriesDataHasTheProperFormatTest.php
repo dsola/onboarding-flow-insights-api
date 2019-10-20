@@ -56,7 +56,7 @@ class SeriesDataHasTheProperFormatTest extends TestCase
 
         /** @var UserRetentionByStepCollection $series */
         $series = $response[0]['series'];
-        $this->assertEquals([], $series->toArray());
+        $this->assertEquals([], $series);
     }
 
     final public function test_when_there_is_a_user_retention_by_step() {
@@ -83,7 +83,7 @@ class SeriesDataHasTheProperFormatTest extends TestCase
                     'name'      => 'Create an account',
                 ],
             ]
-        ], $series->toArray());
+        ], $series);
     }
 
     final public function test_when_there_are_multiple_user_retention_by_steps() {
@@ -108,6 +108,6 @@ class SeriesDataHasTheProperFormatTest extends TestCase
             $userRetentionByStep1->toArray(),
             $userRetentionByStep2->toArray(),
             $userRetentionByStep3->toArray()
-        ], $series->toArray());
+        ], $series);
     }
 }
